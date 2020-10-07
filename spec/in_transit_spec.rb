@@ -17,7 +17,7 @@ describe InTransit do
       it { is_expected.to respond_to :touch_out } 
 
       it 'it activates the card when touched in' do 
-        subject.touch_in
+        intransit.touch_in
         expect(intransit.in_journey?).to eq(true)
       end
 
