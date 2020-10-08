@@ -1,4 +1,4 @@
-require 'train_barrier'
+require 'in_transit'
 require 'oystercard'
 
 describe TrainBarrier do
