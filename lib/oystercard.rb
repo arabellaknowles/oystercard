@@ -14,10 +14,6 @@ class Oystercard
     add_money(cash)
   end
 
-  def deduct_fare(fare)
-    subtract_money(fare)
-  end
-
   def in_journey?
     @activated 
   end
@@ -30,14 +26,14 @@ class Oystercard
   end 
 
   def touch_out
-    @balance -= MINIMUM_FARE
+    deduct_money(MINIMUM_FARE)
 
     @activated = false
   end
 
   private
 
-  def subtract_money(fare)
+  def deduct_money(fare)
     @balance -= fare 
   end
 

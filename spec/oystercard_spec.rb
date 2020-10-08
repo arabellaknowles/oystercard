@@ -18,14 +18,6 @@ describe Oystercard do
     expect { subject.top_up 1}.to raise_error "Max balance of #{Oystercard::DEFAULT_MAX} is exceeded"
   end 
 
-  it { is_expected.to respond_to(:deduct_fare).with(1).argument }
-
-  it 'Does deduct fare' do 
-    subject.top_up(10)
-    subject.deduct_fare(6)
-    expect(subject.balance).to eq(4)
-  end
-
   it 'is not in transit' do
     expect(subject.in_journey?).to eq(false)
   end
@@ -46,5 +38,12 @@ describe Oystercard do
   it 'would raise error if balance is below minimum fare' do 
     expect { subject.touch_in }.to raise_error "Insufficient funds: Balance less than #{Oystercard::MINIMUM_FARE}"
   end
+
+  it 'deducts minimum fare when touching out' do
+    subject.top_up(10)
+    subject.touch_in
+    expect { subject.touch_out }.to change { subject.balance }.by -Oystercard::MINIMUM_FARE
+  end
+
 
 end 
