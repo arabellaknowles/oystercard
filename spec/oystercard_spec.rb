@@ -30,4 +30,21 @@ describe Oystercard do
     expect(subject.in_journey?).to eq(false)
   end
 
+  it 'it activates the card when touched in' do
+    subject.top_up(10)
+    subject.touch_in
+    expect(subject.in_journey?).to eq(true)
+  end
+
+  it 'it deactivates the card when touched out' do 
+    subject.top_up(10)
+    subject.touch_in
+    subject.touch_out
+    expect(subject.in_journey?).to eq(false)
+  end
+
+  it 'would raise error if balance is below minimum fare' do 
+    expect { subject.touch_in }.to raise_error "Insufficient funds: Balance less than #{Oystercard::MINIMUM_FARE}"
+  end
+
 end 

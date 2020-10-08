@@ -1,6 +1,7 @@
 class Oystercard
   attr_accessor :balance
   DEFAULT_MAX = 90
+  MINIMUM_FARE = 1
 
   def initialize
     @balance = 0
@@ -19,6 +20,19 @@ class Oystercard
 
   def in_journey?
     @activated 
+  end
+
+  def touch_in
+    #check_balance - oystercard class
+    fail "Insufficient funds: Balance less than #{MINIMUM_FARE}" if @balance < MINIMUM_FARE
+
+    @activated = true
+  end 
+
+  def touch_out
+    @balance -= MINIMUM_FARE
+
+    @activated = false
   end
 
   private
