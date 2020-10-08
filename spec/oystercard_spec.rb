@@ -2,7 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
 
-  it "freshly initialized cards should have a balance of 0" do
+  it "initialized cards should have a balance of 0" do
     expect(subject.balance).to eq 0
   end
 
@@ -22,7 +22,8 @@ describe Oystercard do
 
   it 'Does deduct fare' do 
     subject.top_up(10)
-    expect(subject.deduct_fare(6)).to eq(4)
+    subject.deduct_fare(6)
+    expect(subject.balance).to eq(4)
   end
 
 end 
