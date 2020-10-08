@@ -70,5 +70,11 @@ describe Oystercard do
     expect(subject.exit_station).to eq :station
   end
 
+  it 'stores one journey as a hash' do
+    subject.top_up(10)
+    subject.touch_in('Bank')
+    subject.touch_out('Fulham')
+    expect(subject.journey_history).to eq [{entry_station: 'Bank', exit_station: 'Fulham'}]
+  end
 
 end 

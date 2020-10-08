@@ -6,6 +6,7 @@ class Oystercard
   def initialize
     @balance = 0
     @journey_history = []
+    @current_journey = {}
   end
 
   def top_up(cash)
@@ -22,11 +23,14 @@ class Oystercard
     #check_balance - oystercard class
     fail "Insufficient funds: Balance less than #{MINIMUM_FARE}" if @balance < MINIMUM_FARE
     @entry_station = station
+    @current_journey[:entry_station] = station
   end 
 
   def touch_out(station)
     deduct_money(MINIMUM_FARE)
     @exit_station = station
+    @current_journey[:exit_station] = station
+    store_journey
     @entry_station = nil
   end
 
@@ -42,6 +46,10 @@ class Oystercard
 
   def over_max_balance?(cash)
     (cash + balance) > DEFAULT_MAX
+  end
+
+  def store_journey
+    @journey_history.push(@current_journey)
   end
 
 end
