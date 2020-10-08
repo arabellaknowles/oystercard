@@ -1,5 +1,5 @@
 class Oystercard
-  attr_accessor :balance
+  attr_accessor :balance, :entry_station
   DEFAULT_MAX = 90
   MINIMUM_FARE = 1
 
@@ -18,16 +18,16 @@ class Oystercard
     @activated 
   end
 
-  def touch_in
+  def touch_in(station)
     #check_balance - oystercard class
     fail "Insufficient funds: Balance less than #{MINIMUM_FARE}" if @balance < MINIMUM_FARE
-
+    @entry_station = station
     @activated = true
   end 
 
   def touch_out
     deduct_money(MINIMUM_FARE)
-
+    @entry_station = nil
     @activated = false
   end
 
