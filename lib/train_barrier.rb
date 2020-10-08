@@ -1,6 +1,6 @@
 require 'oystercard.rb'
 
-class InTransit
+class TrainBarrier
   MINIMUM_FARE = 1
 
   def initialize
@@ -14,7 +14,8 @@ class InTransit
 
   def touch_in
     #check_balance - oystercard class
-    fail "Insufficient funds: Balance less than #{InTransit::MINIMUM_FARE}" if @card.balance < MINIMUM_FARE
+    fail "Insufficient funds: Balance less than #{MINIMUM_FARE}" if @card.balance < MINIMUM_FARE
+
     @activated = true
   end 
 
