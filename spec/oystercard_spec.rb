@@ -26,4 +26,8 @@ describe Oystercard do
     expect(subject.balance).to eq(4)
   end
 
+  it 'is not in transit' do
+    expect(subject.in_journey?).to eq(false)
+  end
+
 end 

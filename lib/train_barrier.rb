@@ -1,6 +1,7 @@
 require 'oystercard.rb'
 
 class TrainBarrier
+  attr_reader :card
   MINIMUM_FARE = 1
 
   def initialize
@@ -20,6 +21,8 @@ class TrainBarrier
   end 
 
   def touch_out
+    @card.balance -= MINIMUM_FARE
+
     @activated = false
   end
 

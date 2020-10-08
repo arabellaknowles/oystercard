@@ -1,4 +1,4 @@
-require 'in_transit'
+require 'train_barrier'
 require 'oystercard'
 
 describe TrainBarrier do
@@ -25,11 +25,6 @@ describe TrainBarrier do
         subject.touch_in
         subject.touch_out
         expect(trainbarrier.in_journey?).to eq(false)
-      end
-
-      it 'deducts min fare on touch out' do 
-        trainbarrier.touch_in
-        expect{ trainbarrier.touch_out }.to change{ oystercard.balance }.by (TrainBarrier::MINIMUM_FARE)
       end
 end
 
