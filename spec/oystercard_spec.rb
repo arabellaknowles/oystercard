@@ -2,7 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
   let(:station) { double :station }
-  let(:journey) { double :journey, entry_station: station, exit_station: station }
+  let(:journey) { double :journey, entry_station: station, exit_station: station, start: station }
   subject(:card) { Oystercard.new(journey) }
   
   context 'card balance is £0' do
@@ -45,6 +45,12 @@ describe Oystercard do
       it 'creates journey when touching in' do
         expect(journey).to receive(:start)
         card.touch_in('bank')
+      end
+
+      it 'charges a £6 penalty if there is already an entrance station' do
+        expect(journey).to receive(:fare) { 6 }
+        card.touch_in(station)
+        card.touch_in(station)
       end
     end
   end
