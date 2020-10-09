@@ -24,62 +24,69 @@ describe Oystercard do
     end 
   end
 
-  it 'is not in transit' do
-    expect(card.in_journey?).to eq(false)
+  describe "#in_journey?" do
+    it 'is not in transit' do
+      expect(card.in_journey?).to eq(false)
+    end
+
+    it 'it activates the card when touched in' do
+      card.top_up(10)
+      card.touch_in(:station)
+      expect(card.in_journey?).to eq(true)
+    end
+
+    it 'it deactivates the card when touched out' do 
+      card.top_up(10)
+      card.touch_in(:station)
+      card.touch_out(:station)
+      expect(card.in_journey?).to eq(false)
+    end
   end
-
-  it 'it activates the card when touched in' do
-    card.top_up(10)
-    card.touch_in(:station)
-    expect(card.in_journey?).to eq(true)
-  end
-
-  it 'it deactivates the card when touched out' do 
-    card.top_up(10)
-    card.touch_in(:station)
-    card.touch_out(:station)
-    expect(card.in_journey?).to eq(false)
-  end
-
-  it 'would raise error if balance is below minimum fare' do 
-    expect { card.touch_in(:station) }.to raise_error "Insufficient funds: Balance less than #{Oystercard::MINIMUM_FARE}"
-  end
-
-  it 'deducts minimum fare when touching out' do
-    card.top_up(10)
-    card.touch_in(:station)
-    expect { card.touch_out(:station) }.to change { card.balance }.by -Oystercard::MINIMUM_FARE
-  end
-
-  it 'knows the entry station' do
-    card.top_up(10)
-
-    expect { card.touch_in(:station)}.to change { card.entry_station}.to eq :station
   
+  describe "#touch_in" do
+    it 'would raise error if balance is below minimum fare' do 
+      expect { card.touch_in(:station) }.to raise_error "Insufficient funds: Balance less than #{Oystercard::MINIMUM_FARE}"
+    end
+
+    it 'knows the entry station' do
+      card.top_up(10)
+  
+      expect { card.touch_in(:station)}.to change { card.entry_station}.to eq :station
+    
+    end
   end
 
-  it 'updates entry station to nil on touch out' do 
-    card.top_up(10)
-    card.touch_in(:station)
-    expect { card.touch_out(:station) }.to change { card.entry_station}.to eq nil
+  describe "#touch_out" do
+    it 'deducts minimum fare when touching out' do
+      card.top_up(10)
+      card.touch_in(:station)
+      expect { card.touch_out(:station) }.to change { card.balance }.by -Oystercard::MINIMUM_FARE
+    end
+
+    it 'updates entry station to nil on touch out' do 
+      card.top_up(10)
+      card.touch_in(:station)
+      expect { card.touch_out(:station) }.to change { card.entry_station}.to eq nil
+    end
+
+    it 'knows the exit station' do
+      card.top_up(10)
+      card.touch_in(:station)
+      card.touch_out(:station)
+      expect(card.exit_station).to eq :station
+    end
   end
 
-  it 'has a journey history' do
-    expect(card.journey_history).to eq []
-  end
+  describe 'journey history' do
+    it 'has a journey history' do
+      expect(card.journey_history).to eq []
+    end
 
-  it 'knows the exit station' do
-    card.top_up(10)
-    card.touch_in(:station)
-    card.touch_out(:station)
-    expect(card.exit_station).to eq :station
+    it 'stores one journey as a hash' do
+      card.top_up(10)
+      card.touch_in('Bank')
+      card.touch_out('Fulham')
+      expect(card.journey_history).to eq [{entry_station: 'Bank', exit_station: 'Fulham'}]
+    end
   end
-
-  it 'stores one journey as a hash' do
-    card.top_up(10)
-    card.touch_in('Bank')
-    card.touch_out('Fulham')
-    expect(card.journey_history).to eq [{entry_station: 'Bank', exit_station: 'Fulham'}]
-  end
-
 end 
