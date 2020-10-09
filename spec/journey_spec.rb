@@ -30,12 +30,12 @@ describe Journey do
   it 'calculates fare of £1 when journey is completed' do
     journey.start('bank')
     journey.finish('fulham')
-    expect(journey.fare).to eq 1
+    expect(journey.fare).to eq Journey::MINIMUM_FARE
   end
 
   it 'calculates fare of £6 when journey is incomplete' do
     journey.start('bank')
-    expect(journey.fare).to eq 6
+    expect(journey.fare).to eq Journey::PENALTY_CHARGE
   end
 
 end
