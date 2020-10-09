@@ -11,10 +11,6 @@ describe Journey do
     expect(journey.exit_station).to eq nil
   end
 
-  it { is_expected.to respond_to(:start).with(1).argument }
-
-  it { is_expected.to respond_to(:finish).with(1).argument }
-
   it 'changes entrance station to station input' do
     journey.start('bank')
     expect(journey.entry_station).to eq('bank')
@@ -29,6 +25,17 @@ describe Journey do
     journey.start('bank')
     journey.finish('fulham')
     expect(journey).to be_complete
+  end
+
+  it 'calculates fare of £1 when journey is completed' do
+    journey.start('bank')
+    journey.finish('fulham')
+    expect(journey.fare).to eq 1
+  end
+
+  it 'calculates fare of £6 when journey is incomplete' do
+    journey.start('bank')
+    expect(journey.fare).to eq 6
   end
 
 end

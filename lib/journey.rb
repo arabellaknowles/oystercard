@@ -18,4 +18,9 @@ class Journey
     @entry_station && @exit_station
   end
 
+  def fare
+    complete? ? 1 : 6
+  end
+
+
 end
