@@ -26,8 +26,7 @@ class Oystercard
     # journey.start(station)
     # @current_journey[:entry_station] = station
     # @entry_station = station
-
-    @current_journey.start(station)
+    @current_journey.entry_station ? deduct_money(@current_journey.fare) : @current_journey.start(station)
   end 
 
   def touch_out(station)
