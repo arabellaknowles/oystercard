@@ -20,8 +20,8 @@ class Oystercard
   end
 
   def touch_in(station)
-    #check_balance - oystercard class
-    fail "Insufficient funds: Balance less than #{MINIMUM_FARE}" if @balance < MINIMUM_FARE
+    raise "Insufficient funds: Balance less than #{MINIMUM_FARE}" if insufficient_funds
+
     @entry_station = station
     @current_journey[:entry_station] = station
   end 
@@ -51,5 +51,10 @@ class Oystercard
   def store_journey
     @journey_history.push(@current_journey)
   end
+
+  def insufficient_funds
+    @balance < MINIMUM_FARE
+  end
+
 
 end
