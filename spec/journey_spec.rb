@@ -24,4 +24,11 @@ describe Journey do
     journey.finish('fulham')
     expect(journey.exit_station).to eq('fulham')
   end
+
+  it 'returns journey is complete' do
+    journey.start('bank')
+    journey.finish('fulham')
+    expect(journey).to be_complete
+  end
+
 end
