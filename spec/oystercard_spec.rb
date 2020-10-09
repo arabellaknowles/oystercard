@@ -3,22 +3,26 @@ require 'oystercard'
 describe Oystercard do
   let(:station) { double :station }
   subject(:card) { Oystercard.new }
-
-  it "initialized cards should have a balance of 0" do
-    expect(card.balance).to eq 0
+  
+  describe "#initialize" do
+    it "initialized cards should have a balance of 0" do
+      expect(card.balance).to eq 0
+    end
   end
 
-  it { is_expected.to respond_to(:top_up).with(1).argument }
+  describe "#top_up" do
+    it { is_expected.to respond_to(:top_up).with(1).argument }
 
-  it 'can top up the balance' do
-    card.top_up(10)
-    expect(card.balance).to eq(10)
+    it 'can top up the balance' do
+      card.top_up(10)
+      expect(card.balance).to eq(10)
+    end
+
+    it 'raises error if the max-balance is exceeded' do 
+      card.top_up(90)
+      expect { card.top_up 1}.to raise_error "Max balance of #{Oystercard::DEFAULT_MAX} is exceeded"
+    end 
   end
-
-  it 'raises error if the max-balance is exceeded' do 
-    card.top_up(90)
-    expect { card.top_up 1}.to raise_error "Max balance of #{Oystercard::DEFAULT_MAX} is exceeded"
-  end 
 
   it 'is not in transit' do
     expect(card.in_journey?).to eq(false)
