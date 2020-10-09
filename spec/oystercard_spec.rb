@@ -91,7 +91,7 @@ describe Oystercard do
         card.touch_out('Fulham')
         card.touch_in('Pimlico')
         card.touch_out('London Fields')
-        expect(card.journey_history).to eq [{entry_station: 'Fulham', exit_station: 'Bank'}, {entry_station: 'Pimlico', exit_station: 'London Fields'}]
+        expect(card.journey_history).to eq([{entry_station: 'Bank', exit_station: 'Fulham'}, {entry_station: 'Pimlico', exit_station: 'London Fields'}])
       end
     end
   end

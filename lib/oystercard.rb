@@ -22,8 +22,8 @@ class Oystercard
   def touch_in(station)
     raise "Insufficient funds: Balance less than #{MINIMUM_FARE}" if insufficient_funds
 
-    @entry_station = station
     @current_journey[:entry_station] = station
+    @entry_station = station
   end 
 
   def touch_out(station)
@@ -49,7 +49,8 @@ class Oystercard
   end
 
   def store_journey
-    @journey_history.push(@current_journey)
+    @journey_history << @current_journey
+    @current_journey = {}
   end
 
   def insufficient_funds
