@@ -1,19 +1,14 @@
 require 'station'
 
 describe Station do
-
-  let(:name) { double :name }
-  let(:zone) { double :zone }
-  subject(:station) {Station.new(:name, :zone) }
+  subject(:station) {Station.new('Bank', 1) }
 
   it 'is created with a @name' do
-  
-    expect(station.name).to eq :name
+    expect(station.name).to eq 'Bank'
   end
 
   it 'is created with a @zone' do
-
-    expect(station.zone).to eq :zone
+    expect(station.zone).to eq 1
   end
 
 end
