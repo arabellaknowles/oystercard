@@ -76,7 +76,7 @@ describe Oystercard do
     end
 
     describe 'journey history' do
-      it 'has a journey history' do
+      it 'has an empty journey history on initialization' do
         expect(card.journey_history).to eq []
       end
   
@@ -84,6 +84,14 @@ describe Oystercard do
         card.touch_in('Bank')
         card.touch_out('Fulham')
         expect(card.journey_history).to eq [{entry_station: 'Bank', exit_station: 'Fulham'}]
+      end
+
+      it 'stores multiple journeys in the journey_history array' do
+        card.touch_in('Bank')
+        card.touch_out('Fulham')
+        card.touch_in('Pimlico')
+        card.touch_out('London Fields')
+        expect(card.journey_history).to eq [{entry_station: 'Fulham', exit_station: 'Bank'}, {entry_station: 'Pimlico', exit_station: 'London Fields'}]
       end
     end
   end
