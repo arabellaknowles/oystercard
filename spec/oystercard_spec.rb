@@ -4,13 +4,21 @@ describe Oystercard do
   let(:station) { double :station }
   subject(:card) { Oystercard.new }
   
-  describe "#initialize" do
-    it "initializes cards with a balance of 0" do
-      expect(card.balance).to eq 0
+  context 'card balance is £0' do
+    describe "#initialize" do
+      it "initializes cards with a balance of 0" do
+        expect(card.balance).to eq 0
+      end
+    end
+
+    describe "#touch_in" do
+      it 'would raise error if balance is below minimum fare' do 
+        expect { card.touch_in(:station) }.to raise_error "Insufficient funds: Balance less than #{Oystercard::MINIMUM_FARE}"
+      end
     end
   end
-  
-  context 'topped up card' do
+
+  context 'card balance is £10' do
     before do
       card.top_up(10)
     end
@@ -26,8 +34,6 @@ describe Oystercard do
     end
 
     describe "#in_journey?" do
-    
-
       it 'is not in transit when initialized' do
         expect(card.in_journey?).to eq(false)
       end
@@ -78,14 +84,6 @@ describe Oystercard do
         card.touch_in('Bank')
         card.touch_out('Fulham')
         expect(card.journey_history).to eq [{entry_station: 'Bank', exit_station: 'Fulham'}]
-      end
-    end
-  end
-  
-  context 'card balance is £0' do
-    describe "#touch_in" do
-      it 'would raise error if balance is below minimum fare' do 
-        expect { card.touch_in(:station) }.to raise_error "Insufficient funds: Balance less than #{Oystercard::MINIMUM_FARE}"
       end
     end
   end
