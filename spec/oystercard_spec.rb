@@ -9,83 +9,84 @@ describe Oystercard do
       expect(card.balance).to eq 0
     end
   end
-
-  describe "#top_up" do
+  
+  context 'topped up card' do
     before do
       card.top_up(10)
     end
+  
+    describe "#top_up" do
+      it 'can top up the balance' do
+        expect(card.balance).to eq(10)
+      end
 
-    it 'can top up the balance' do
-      expect(card.balance).to eq(10)
+      it 'raises error if the max-balance is exceeded' do 
+        expect { card.top_up 85 }.to raise_error "Max balance of #{Oystercard::DEFAULT_MAX} is exceeded"
+      end 
     end
 
-    it 'raises error if the max-balance is exceeded' do 
-      expect { card.top_up 85 }.to raise_error "Max balance of #{Oystercard::DEFAULT_MAX} is exceeded"
-    end 
-  end
+    describe "#in_journey?" do
+    
 
-  describe "#in_journey?" do
-    before do
-      card.top_up(10)
+      it 'is not in transit when initialized' do
+        expect(card.in_journey?).to eq(false)
+      end
+
+      it 'it is in journey when the card is touched in' do
+        card.touch_in(:station)
+        expect(card.in_journey?).to eq(true)
+      end
+
+      it 'it deactivates the card when touched out' do 
+        card.touch_in(:station)
+        card.touch_out(:station)
+        expect(card.in_journey?).to eq(false)
+      end
     end
 
-    it 'is not in transit when initialized' do
-      expect(card.in_journey?).to eq(false)
+    describe "#touch_in" do
+      it 'knows the entry station' do
+        expect { card.touch_in(:station) }.to change { card.entry_station }.to eq :station
+      end
     end
 
-    it 'it is in journey when the card is touched in' do
-      card.touch_in(:station)
-      expect(card.in_journey?).to eq(true)
+    describe "#touch_out" do
+      before do 
+        card.touch_in(:station)
+      end
+
+      it 'deducts minimum fare when touching out' do
+        expect { card.touch_out(:station) }.to change { card.balance }.by -Oystercard::MINIMUM_FARE
+      end
+
+      it 'updates entry station to nil on touch out' do 
+        expect { card.touch_out(:station) }.to change { card.entry_station }.to eq nil
+      end
+
+      it 'knows the exit station' do
+        card.touch_out(:station)
+        expect(card.exit_station).to eq :station
+      end
     end
 
-    it 'it deactivates the card when touched out' do 
-      card.touch_in(:station)
-      card.touch_out(:station)
-      expect(card.in_journey?).to eq(false)
+    describe 'journey history' do
+      it 'has a journey history' do
+        expect(card.journey_history).to eq []
+      end
+  
+      it 'stores one journey as a hash' do
+        card.touch_in('Bank')
+        card.touch_out('Fulham')
+        expect(card.journey_history).to eq [{entry_station: 'Bank', exit_station: 'Fulham'}]
+      end
     end
   end
   
-  describe "#touch_in" do
-    it 'would raise error if balance is below minimum fare' do 
-      expect { card.touch_in(:station) }.to raise_error "Insufficient funds: Balance less than #{Oystercard::MINIMUM_FARE}"
-    end
-
-    it 'knows the entry station' do
-      card.top_up(10)
-      expect { card.touch_in(:station) }.to change { card.entry_station }.to eq :station
+  context 'card balance is £0' do
+    describe "#touch_in" do
+      it 'would raise error if balance is below minimum fare' do 
+        expect { card.touch_in(:station) }.to raise_error "Insufficient funds: Balance less than #{Oystercard::MINIMUM_FARE}"
+      end
     end
   end
-
-  describe "#touch_out" do
-    before do 
-      card.top_up(10)
-      card.touch_in(:station)
-    end
-
-    it 'deducts minimum fare when touching out' do
-      expect { card.touch_out(:station) }.to change { card.balance }.by -Oystercard::MINIMUM_FARE
-    end
-
-    it 'updates entry station to nil on touch out' do 
-      expect { card.touch_out(:station) }.to change { card.entry_station }.to eq nil
-    end
-
-    it 'knows the exit station' do
-      card.touch_out(:station)
-      expect(card.exit_station).to eq :station
-    end
-  end
-
-  describe 'journey history' do
-    it 'has a journey history' do
-      expect(card.journey_history).to eq []
-    end
-
-    it 'stores one journey as a hash' do
-      card.top_up(10)
-      card.touch_in('Bank')
-      card.touch_out('Fulham')
-      expect(card.journey_history).to eq [{entry_station: 'Bank', exit_station: 'Fulham'}]
-    end
-  end
-end 
+end
